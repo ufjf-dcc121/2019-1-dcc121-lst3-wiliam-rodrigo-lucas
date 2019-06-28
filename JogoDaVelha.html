@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jogo da Velha</title>
+    <style>
+        .grid{
+            display: grid;
+            grid-template-columns: auto auto auto;
+            grid-gap: 2px;
+            padding: 2px;
+            height: fit-content;
+            width: fit-content;
+            margin: 2px;
+        }
+        .grid>div{
+            padding: 5px;
+            width: 20px;
+            text-align: center;
+            border: 1px dotted;
+            height: 20px;
+        }
+    </style>
+    <div class="grid" input type="text">
+        
+    </div>
+    
+</head>
+<body>
+    <script>
+        var jogador=1;
+        var tabuleiro = [[],[],[]];
+        var fimDeJogo=0;
+        //referencias das casas.
+        var grid = document.getElementsByClassName("grid")[0];
+    
+        //adiciona evento em todas as casas
+        
+        criaTabuleiro();
+        
+        //função para marcar X ou O
+        function jogada(){
+            console.log
+            if(this.innerText=="" && !fimDeJogo){
+                if(jogador==1){
+                    this.innerText="X";
+                    jogador=2;
+                }
+                else{
+                    this.innerText="O";
+                    jogador=1;
+                }
+
+            }
+            verificarVitoria();            
+        }
+
+        function criaTabuleiro(){
+            for (var linha = 0; linha < 3; linha++) {
+                for (var coluna = 0; coluna < 3; coluna++) {
+                    var novaDiv = document.createElement("div");
+                    novaDiv.addEventListener("click",jogada); 
+                    tabuleiro[linha][coluna] = novaDiv;
+                    grid.appendChild(novaDiv);
+                }
+            }
+        }
+
+        function verificarVitoria(){
+            //Linhas
+            for (var linha = 0; linha < 3; linha++) {
+                if(tabuleiro[linha][0].innerText!=""){
+                    if(tabuleiro[linha][0].innerText==tabuleiro[linha][1].innerText && tabuleiro[linha][1].innerText==tabuleiro[linha][2].innerText){
+                        tabuleiro[linha][0].style.color = "red";
+                        tabuleiro[linha][1].style.color = "red";
+                        tabuleiro[linha][2].style.color = "red";
+                        fimDeJogo=1;
+                        if(jogador==1) console.log("Jogador O venceu!");
+                        else console.log("Jogador X venceu!");
+                    }
+                }
+            }
+            //Colunas
+            for (var coluna = 0; coluna < 3; coluna++) {
+                if(tabuleiro[0][coluna].innerText!=""){
+                    if(tabuleiro[0][coluna].innerText==tabuleiro[1][coluna].innerText && tabuleiro[1][coluna].innerText==tabuleiro[2][coluna].innerText){
+                        tabuleiro[0][coluna].style.color = "red";
+                        tabuleiro[1][coluna].style.color = "red";
+                        tabuleiro[2][coluna].style.color = "red";
+                        fimDeJogo=1;
+                        if(jogador==1) console.log("Jogador O venceu!");
+                        else console.log("Jogador X venceu!");
+                    }
+                }
+            }
+
+            //Diagonal Primaria
+            if(tabuleiro[0][0].innerText!=""){
+                if(tabuleiro[0][0].innerText==tabuleiro[1][1].innerText && tabuleiro[1][1].innerText==tabuleiro[2][2].innerText){
+                    tabuleiro[0][0].style.color = "red";
+                    tabuleiro[1][1].style.color = "red";
+                    tabuleiro[2][2].style.color = "red";
+                    fimDeJogo=1;
+                    if(jogador==1) console.log("Jogador O venceu!");
+                    else console.log("Jogador X venceu!");
+                }
+            }
+
+            //Diagonal Secundaria
+            if(tabuleiro[0][2].innerText!=""){
+                if(tabuleiro[0][2].innerText==tabuleiro[2][2].innerText && tabuleiro[2][2].innerText==tabuleiro[3][0].innerText){
+                    tabuleiro[0][2].style.color = "red";
+                    tabuleiro[2][2].style.color = "red";
+                    tabuleiro[3][0].style.color = "red";
+                    fimDeJogo=1;
+                    if(jogador==1) console.log("Jogador O venceu!");
+                    else console.log("Jogador X venceu!");
+                }
+            }
+        }
+    </script>
+</body>
+</html>
