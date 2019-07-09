@@ -20,9 +20,18 @@
             border: 1px dotted;
             height: 20px;
         }
+
     </style>
     <div class="grid" input type="text">
         
+    </div>
+    
+    <button id="newGame" disabled>Novo Jogo</button>
+
+    <div class="placar">
+        <p>PLACAR</p>
+        <p>Jogador X: <span id="pX">0</span></p>
+        <p>Jogador O: <span id="pO">0</span></p>
     </div>
     
 </head>
@@ -31,13 +40,18 @@
         var jogador=1;
         var tabuleiro = [[],[],[]];
         var fimDeJogo=0;
-        //referencias das casas.
+        
+        //Referencias
         var grid = document.getElementsByClassName("grid")[0];
-    
-        //adiciona evento em todas as casas
+        var placarX = document.getElementById("pX");
+        var placarO = document.getElementById("pO");
+        var btnNewGame = document.getElementById("newGame");
+        
         
         criaTabuleiro();
-        
+        btnNewGame.addEventListener("click",resetarJogo);
+
+
         //função para marcar X ou O
         function jogada(){
             console.log
@@ -67,57 +81,103 @@
         }
 
         function verificarVitoria(){
+            
+            if( (verificaLinhas() || verificaColunas() || verificaDiagonais()) && !fimDeJogo){
+                fimDeJogo=1;
+                if(jogador==1) 
+                    placarO.innerText = Number(placarO.innerText)+1;
+                
+                else
+                    placarX.innerText = Number(placarX.innerText)+1;
+                
+                btnNewGame.disabled = false;
+            }
+            else {
+                if(verificaVelha() && !fimDeJogo){
+                    for (var linha = 0; linha < 3; linha++) 
+                        for (var coluna = 0; coluna < 3; coluna++) 
+                            tabuleiro[linha][coluna].style.color = "red";
+                    fimDeJogo=1;
+                    btnNewGame.disabled = false;
+                } 
+            }
+        }
+
+        function verificaVelha(){
+            for (var linha = 0; linha < 3; linha++) {
+                for (var coluna = 0; coluna < 3; coluna++) {
+                    if(tabuleiro[linha][coluna].innerText == ""){
+                        return false; 
+                    }
+                }
+            }
+            return true; 
+        } 
+
+
+        function verificaLinhas(){
             //Linhas
             for (var linha = 0; linha < 3; linha++) {
                 if(tabuleiro[linha][0].innerText!=""){
                     if(tabuleiro[linha][0].innerText==tabuleiro[linha][1].innerText && tabuleiro[linha][1].innerText==tabuleiro[linha][2].innerText){
-                        tabuleiro[linha][0].style.color = "red";
-                        tabuleiro[linha][1].style.color = "red";
-                        tabuleiro[linha][2].style.color = "red";
-                        fimDeJogo=1;
-                        if(jogador==1) console.log("Jogador O venceu!");
-                        else console.log("Jogador X venceu!");
+                        tabuleiro[linha][0].style.color = "green";
+                        tabuleiro[linha][1].style.color = "green";
+                        tabuleiro[linha][2].style.color = "green";
+                        return true;
                     }
                 }
             }
+        }
+
+        function verificaColunas(){
             //Colunas
             for (var coluna = 0; coluna < 3; coluna++) {
                 if(tabuleiro[0][coluna].innerText!=""){
                     if(tabuleiro[0][coluna].innerText==tabuleiro[1][coluna].innerText && tabuleiro[1][coluna].innerText==tabuleiro[2][coluna].innerText){
-                        tabuleiro[0][coluna].style.color = "red";
-                        tabuleiro[1][coluna].style.color = "red";
-                        tabuleiro[2][coluna].style.color = "red";
-                        fimDeJogo=1;
-                        if(jogador==1) console.log("Jogador O venceu!");
-                        else console.log("Jogador X venceu!");
+                        tabuleiro[0][coluna].style.color = "green";
+                        tabuleiro[1][coluna].style.color = "green";
+                        tabuleiro[2][coluna].style.color = "green";
+                        return true;
                     }
                 }
             }
+        }
 
+        function verificaDiagonais(){
             //Diagonal Primaria
             if(tabuleiro[0][0].innerText!=""){
                 if(tabuleiro[0][0].innerText==tabuleiro[1][1].innerText && tabuleiro[1][1].innerText==tabuleiro[2][2].innerText){
-                    tabuleiro[0][0].style.color = "red";
-                    tabuleiro[1][1].style.color = "red";
-                    tabuleiro[2][2].style.color = "red";
-                    fimDeJogo=1;
-                    if(jogador==1) console.log("Jogador O venceu!");
-                    else console.log("Jogador X venceu!");
+                    tabuleiro[0][0].style.color = "green";
+                    tabuleiro[1][1].style.color = "green";
+                    tabuleiro[2][2].style.color = "green";
+                    return true;
                 }
             }
 
             //Diagonal Secundaria
             if(tabuleiro[0][2].innerText!=""){
-                if(tabuleiro[0][2].innerText==tabuleiro[2][2].innerText && tabuleiro[2][2].innerText==tabuleiro[3][0].innerText){
-                    tabuleiro[0][2].style.color = "red";
-                    tabuleiro[2][2].style.color = "red";
-                    tabuleiro[3][0].style.color = "red";
-                    fimDeJogo=1;
-                    if(jogador==1) console.log("Jogador O venceu!");
-                    else console.log("Jogador X venceu!");
+                if(tabuleiro[0][2].innerText==tabuleiro[1][1].innerText && tabuleiro[1][1].innerText==tabuleiro[2][0].innerText){
+                    tabuleiro[0][2].style.color = "green";
+                    tabuleiro[1][1].style.color = "green";
+                    tabuleiro[2][0].style.color = "green";
+                    return true;
                 }
             }
         }
+
+        function resetarJogo(){
+            //resetar tabuleiro
+            for (var linha = 0; linha < 3; linha++) {
+                for (var coluna = 0; coluna < 3; coluna++) {
+                    tabuleiro[linha][coluna].innerText = "";
+                    tabuleiro[linha][coluna].style.color ="";
+                }
+            }
+            fimDeJogo = 0;
+            btnNewGame.disabled = true;
+            jogador=1;
+        }
+
     </script>
 </body>
 </html>
