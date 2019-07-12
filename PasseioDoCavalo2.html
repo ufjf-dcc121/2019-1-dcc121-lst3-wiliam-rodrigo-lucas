@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Passeio do Cavalo</title>
+    
+    <style>
+        #corpo{
+            display: grid;
+            grid-template-columns: auto auto auto auto auto auto auto auto;
+            grid-gap: 2px;
+            padding: 2px;
+            height: fit-content;
+            width: fit-content;
+            margin: 2px;
+        }
+        #corpo>div{
+            border-width: 1px;
+            border-color: black;
+            border-style: solid;
+            background-color: rgba(0, 0, 255, 0.3);
+            width: 65px;
+            height: 65px;
+            display: inline-block;
+            margin: 1px;
+            text-align: center;
+            font-size: 60px;  
+        }
+
+    </style>
+
+</head>
+<body>
+    <CENTER id="corpo">
+        
+    </CENTER>
+    <button id="resetar">Resetar</button>
+        <button id="resolver" disabled>Tentar Resolver</button>
+    
+
+    <script>
+        var tabuleiro = [[],[],[],[],[],[],[],[]];
+        var camposPossiveisJogadas = [];
+        var camposJaUtilizados = [];
+        var quantidadeDeJogadas = 0;
+        var primeiraJogada = true;
+        
+        //Referncias
+        var corpo = document.getElementById("corpo");
+        var btnResetar = document.getElementById("resetar");
+        var btnResolver = document.getElementById("resolver");
+
+        criaTabuleiro();
+        
+        //Função responsável por criar o tabuleiro e colocar em uma matriz de divs
+        function criaTabuleiro(){
+            for (var linha = 0; linha < 8; linha++) {
+                for (var coluna = 0; coluna < 8; coluna++) {
+                    var novaDiv = document.createElement("div");
+                    novaDiv.addEventListener("click",ouvinteClick(linha,coluna)); 
+                    tabuleiro[linha][coluna] = {linha:linha,coluna:coluna,elemento:novaDiv};
+                    corpo.appendChild(novaDiv);
+                }
+            }
+        }
+
+        //Função responsável por fazer a ação ao clicar em qualquer campo do tabuleiro
+        function ouvinteClick(linha,coluna){
+            return function(){
+                //Se for a primeira jogada, o botao ira se ativar e a primeira casa ira ser colorida
+                if(primeiraJogada){
+                    quantidadeDeJogadas++;
+                    this.textContent = quantidadeDeJogadas;
+                    this.style.backgroundColor = "rgba(0, 0, 255, 0.6)";
+                    
+                    camposJaUtilizados.push(this);
+
+                    btnResolver.disabled = false;
+                    primeiraJogada = false;
+
+                    possiveisJogadas(linha,coluna);
+                }
+                //caso contrario o campo selecionado anteriormente será colorido de cinza(desativado)
+                else{
+                    if(verificaJogada(linha,coluna)){
+                        quantidadeDeJogadas++;
+                        this.textContent = quantidadeDeJogadas;
+                        this.style.backgroundColor = "rgba(0, 0, 255, 0.6)";
+                    
+                        camposJaUtilizados.push(this);
+                        camposJaUtilizados[camposJaUtilizados.length-2].style.backgroundColor = "rgba(68, 68, 68, 0.5)";
+
+                        possiveisJogadas(linha,coluna);
+                    }
+                    
+                }
+
+                
+            }
+        }
+
+        //Verifica quais jogadas podem ser feitas
+        function possiveisJogadas(linha,coluna){
+
+            //---Verificação de todas as possibildades de campos para o cavalo andar
+            possivelLinha = linha-2; possivelColuna = coluna+1;
+
+            camposPossiveisJogadas=[];
+
+            if( possivelLinha>=0 && possivelLinha<=7 && possivelColuna>=0 && possivelColuna<=7 ) //Verificação se linha e coluna não saem do tabuleiro
+                camposPossiveisJogadas.push({linha:possivelLinha,coluna:possivelColuna});
+            
+            possivelLinha = linha-2; possivelColuna = coluna-1;
+
+            if( possivelLinha>=0 && possivelLinha<=7 && possivelColuna>=0 && possivelColuna<=7 )
+                camposPossiveisJogadas.push({linha:possivelLinha,coluna:possivelColuna});
+
+            possivelLinha = linha-1; possivelColuna = coluna+2;
+
+            if( possivelLinha>=0 && possivelLinha<=7 && possivelColuna>=0 && possivelColuna<=7 )
+                camposPossiveisJogadas.push({linha:possivelLinha,coluna:possivelColuna});
+            
+            possivelLinha = linha-1; possivelColuna = coluna-2;
+
+            if( possivelLinha>=0 && possivelLinha<=7 && possivelColuna>=0 && possivelColuna<=7 )
+                camposPossiveisJogadas.push({linha:possivelLinha,coluna:possivelColuna});
+
+            possivelLinha = linha+2; possivelColuna = coluna+1;
+
+            if( possivelLinha>=0 && possivelLinha<=7 && possivelColuna>=0 && possivelColuna<=7 )
+                camposPossiveisJogadas.push({linha:possivelLinha,coluna:possivelColuna});
+
+            possivelLinha = linha+2; possivelColuna = coluna-1;
+
+            if( possivelLinha>=0 && possivelLinha<=7 && possivelColuna>=0 && possivelColuna<=7 )
+                camposPossiveisJogadas.push({linha:possivelLinha,coluna:possivelColuna});
+
+            possivelLinha = linha+1; possivelColuna = coluna+2;
+
+            if( possivelLinha>=0 && possivelLinha<=7 && possivelColuna>=0 && possivelColuna<=7 )
+                camposPossiveisJogadas.push({linha:possivelLinha,coluna:possivelColuna});
+
+            possivelLinha = linha+1; possivelColuna = coluna-2;
+
+            if( possivelLinha>=0 && possivelLinha<=7 && possivelColuna>=0 && possivelColuna<=7 )
+                camposPossiveisJogadas.push({linha:possivelLinha,coluna:possivelColuna});
+
+            //-----Fim das verificações
+
+            //Filtro de campos já visitados. Caso uma casa foi pintada de cinza, ela é excluida do vetor de possibilidades
+            for (var i = 0; i < camposPossiveisJogadas.length; i++) {
+                if(tabuleiro[camposPossiveisJogadas[i].linha][camposPossiveisJogadas[i].coluna].elemento.style.backgroundColor == "rgba(68, 68, 68, 0.5)"){
+                    camposPossiveisJogadas.splice(i,1);
+                    i--;
+                }
+                
+            }
+
+            colorirPossiveisCasas(camposPossiveisJogadas);
+            
+        }
+        
+        //Função que pecorre o vetor de possiveis jogadas e as destaca
+        function colorirPossiveisCasas(vetor){
+            for (var i = 0; i < vetor.length; i++) {
+                tabuleiro[vetor[i].linha][vetor[i].coluna].elemento.style.backgroundColor = "rgba(0, 255, 0, 0.4)";   
+            }
+        }
+
+        function verificaJogada(linha,coluna){
+            for (var i = 0; i < camposPossiveisJogadas.length; i++) {
+                if(camposPossiveisJogadas[i].linha == linha && camposPossiveisJogadas[i].coluna==coluna) 
+                    return true 
+            }
+            return false
+        }
+
+        
+    
+    </script>
+</body>
+</html>
