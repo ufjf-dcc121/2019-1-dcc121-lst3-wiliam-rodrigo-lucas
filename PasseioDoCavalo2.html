@@ -35,7 +35,7 @@
         
     </CENTER>
     <button id="resetar">Resetar</button>
-        <button id="resolver" disabled>Tentar Resolver</button>
+    <button id="resolver" disabled>Tentar Resolver</button>
     
 
     <script>
@@ -49,6 +49,8 @@
         var corpo = document.getElementById("corpo");
         var btnResetar = document.getElementById("resetar");
         var btnResolver = document.getElementById("resolver");
+        
+        btnResetar.addEventListener("click",resetarJogo);
 
         criaTabuleiro();
         
@@ -67,30 +69,38 @@
         //Função responsável por fazer a ação ao clicar em qualquer campo do tabuleiro
         function ouvinteClick(linha,coluna){
             return function(){
-                //Se for a primeira jogada, o botao ira se ativar e a primeira casa ira ser colorida
+                //Se for a primeira jogada, o botao de resolução ira se ativar
                 if(primeiraJogada){
+
+                    btnResolver.disabled = false;
+                    primeiraJogada = false;
+                    
+                    
                     quantidadeDeJogadas++;
                     this.textContent = quantidadeDeJogadas;
                     this.style.backgroundColor = "rgba(0, 0, 255, 0.6)";
                     
                     camposJaUtilizados.push(this);
 
-                    btnResolver.disabled = false;
-                    primeiraJogada = false;
-
-                    possiveisJogadas(linha,coluna);
+                    camposPossiveisJogadas=verificaPossiveisMovimentos(linha,coluna);
+                    colorirPossiveisCasas(camposPossiveisJogadas,"verde");
                 }
                 //caso contrario o campo selecionado anteriormente será colorido de cinza(desativado)
                 else{
                     if(verificaJogada(linha,coluna)){
+                        colorirPossiveisCasas(camposPossiveisJogadas,"azul");
+                        
+                        //colore o campo clicado anteriormente de cinza
+                        camposJaUtilizados[camposJaUtilizados.length-1].style.backgroundColor = "rgba(68, 68, 68, 0.5)";
+
                         quantidadeDeJogadas++;
                         this.textContent = quantidadeDeJogadas;
                         this.style.backgroundColor = "rgba(0, 0, 255, 0.6)";
                     
                         camposJaUtilizados.push(this);
-                        camposJaUtilizados[camposJaUtilizados.length-2].style.backgroundColor = "rgba(68, 68, 68, 0.5)";
 
-                        possiveisJogadas(linha,coluna);
+                        camposPossiveisJogadas=verificaPossiveisMovimentos(linha,coluna);
+                        colorirPossiveisCasas(camposPossiveisJogadas,"verde");
                     }
                     
                 }
@@ -99,74 +109,99 @@
             }
         }
 
-        //Verifica quais jogadas podem ser feitas
-        function possiveisJogadas(linha,coluna){
+        //Verifica quais movimentos podem ser feitas e retorna um vetor com as posiçoes de linha e coluna das jogadas
+        function verificaPossiveisMovimentos(linha,coluna){
 
             //---Verificação de todas as possibildades de campos para o cavalo andar
             possivelLinha = linha-2; possivelColuna = coluna+1;
 
-            camposPossiveisJogadas=[];
+            var possiveisMovimentos=[];
 
             if( possivelLinha>=0 && possivelLinha<=7 && possivelColuna>=0 && possivelColuna<=7 ) //Verificação se linha e coluna não saem do tabuleiro
-                camposPossiveisJogadas.push({linha:possivelLinha,coluna:possivelColuna});
+            possiveisMovimentos.push({linha:possivelLinha,coluna:possivelColuna});
             
             possivelLinha = linha-2; possivelColuna = coluna-1;
 
             if( possivelLinha>=0 && possivelLinha<=7 && possivelColuna>=0 && possivelColuna<=7 )
-                camposPossiveisJogadas.push({linha:possivelLinha,coluna:possivelColuna});
+                possiveisMovimentos.push({linha:possivelLinha,coluna:possivelColuna});
 
             possivelLinha = linha-1; possivelColuna = coluna+2;
 
             if( possivelLinha>=0 && possivelLinha<=7 && possivelColuna>=0 && possivelColuna<=7 )
-                camposPossiveisJogadas.push({linha:possivelLinha,coluna:possivelColuna});
+                possiveisMovimentos.push({linha:possivelLinha,coluna:possivelColuna});
             
             possivelLinha = linha-1; possivelColuna = coluna-2;
 
             if( possivelLinha>=0 && possivelLinha<=7 && possivelColuna>=0 && possivelColuna<=7 )
-                camposPossiveisJogadas.push({linha:possivelLinha,coluna:possivelColuna});
+                possiveisMovimentos.push({linha:possivelLinha,coluna:possivelColuna});
 
             possivelLinha = linha+2; possivelColuna = coluna+1;
 
             if( possivelLinha>=0 && possivelLinha<=7 && possivelColuna>=0 && possivelColuna<=7 )
-                camposPossiveisJogadas.push({linha:possivelLinha,coluna:possivelColuna});
+                possiveisMovimentos.push({linha:possivelLinha,coluna:possivelColuna});
 
             possivelLinha = linha+2; possivelColuna = coluna-1;
 
             if( possivelLinha>=0 && possivelLinha<=7 && possivelColuna>=0 && possivelColuna<=7 )
-                camposPossiveisJogadas.push({linha:possivelLinha,coluna:possivelColuna});
+                possiveisMovimentos.push({linha:possivelLinha,coluna:possivelColuna});
 
             possivelLinha = linha+1; possivelColuna = coluna+2;
 
             if( possivelLinha>=0 && possivelLinha<=7 && possivelColuna>=0 && possivelColuna<=7 )
-                camposPossiveisJogadas.push({linha:possivelLinha,coluna:possivelColuna});
+                possiveisMovimentos.push({linha:possivelLinha,coluna:possivelColuna});
 
-            possivelLinha = linha+1; possivelColuna = coluna-2;
+                possivelLinha = linha+1; possivelColuna = coluna-2;
 
             if( possivelLinha>=0 && possivelLinha<=7 && possivelColuna>=0 && possivelColuna<=7 )
-                camposPossiveisJogadas.push({linha:possivelLinha,coluna:possivelColuna});
+                possiveisMovimentos.push({linha:possivelLinha,coluna:possivelColuna});
 
             //-----Fim das verificações
 
             //Filtro de campos já visitados. Caso uma casa foi pintada de cinza, ela é excluida do vetor de possibilidades
-            for (var i = 0; i < camposPossiveisJogadas.length; i++) {
-                if(tabuleiro[camposPossiveisJogadas[i].linha][camposPossiveisJogadas[i].coluna].elemento.style.backgroundColor == "rgba(68, 68, 68, 0.5)"){
-                    camposPossiveisJogadas.splice(i,1);
+            for (var i = 0; i < possiveisMovimentos.length; i++) {
+                if(tabuleiro[possiveisMovimentos[i].linha][possiveisMovimentos[i].coluna].elemento.style.backgroundColor == "rgba(68, 68, 68, 0.5)"){
+                    possiveisMovimentos.splice(i,1);
                     i--;
                 }
                 
             }
 
-            colorirPossiveisCasas(camposPossiveisJogadas);
+            return possiveisMovimentos;
             
         }
         
-        //Função que pecorre o vetor de possiveis jogadas e as destaca
-        function colorirPossiveisCasas(vetor){
-            for (var i = 0; i < vetor.length; i++) {
-                tabuleiro[vetor[i].linha][vetor[i].coluna].elemento.style.backgroundColor = "rgba(0, 255, 0, 0.4)";   
+        //Função que pecorre o vetor de possiveis jogadas e as destaca. 
+        function colorirPossiveisCasas(vetor,cor){
+            //Caso não exista possibilidades e nem todos os campos foram utilizados, o jogador perdeu e o tabuleiro todo será colorido de vermelho
+            if(vetor.length==0 && camposJaUtilizados.length!=64){
+                for (var linha = 0; linha < 8; linha++) {
+                    for (var coluna = 0; coluna < 8; coluna++) { 
+                        tabuleiro[linha][coluna].elemento.style.backgroundColor = "rgba(255, 0, 0, 0.4)";
+                        
+                    }
+                }
+            }
+            //Caso não exista possibilidades e todos os campos foram utilizados, o jogador ganhou e o tabuleiro todo será colorido de verde
+            else if(vetor.length==0 && camposJaUtilizados.length==64){
+                for (var linha = 0; linha < 8; linha++) {
+                    for (var coluna = 0; coluna < 8; coluna++) { 
+                        tabuleiro[linha][coluna].elemento.style.backgroundColor = "rgba(0, 255, 0, 0.4)";
+                        
+                    }
+                }
+            }
+            else{
+                if(cor=="azul")
+                    for (var i = 0; i < vetor.length; i++) 
+                        tabuleiro[vetor[i].linha][vetor[i].coluna].elemento.style.backgroundColor = "rgba(0, 0, 255, 0.3)";   
+                    
+                if(cor=="verde")
+                    for (var i = 0; i < vetor.length; i++) 
+                        tabuleiro[vetor[i].linha][vetor[i].coluna].elemento.style.backgroundColor = "rgba(0, 255, 0, 0.4)";   
             }
         }
 
+        //Verifica se o campo clicado esta no vetor de possiveis jogadas
         function verificaJogada(linha,coluna){
             for (var i = 0; i < camposPossiveisJogadas.length; i++) {
                 if(camposPossiveisJogadas[i].linha == linha && camposPossiveisJogadas[i].coluna==coluna) 
@@ -175,7 +210,16 @@
             return false
         }
 
-        
+        function resetarJogo(){
+            tabuleiro = [[],[],[],[],[],[],[],[]];
+            camposPossiveisJogadas = [];
+            camposJaUtilizados = [];
+            quantidadeDeJogadas = 0;
+            primeiraJogada = true;
+            corpo.innerHTML="";
+            criaTabuleiro();
+
+        }    
     
     </script>
 </body>
