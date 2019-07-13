@@ -13,6 +13,7 @@
             height: fit-content;
             width: fit-content;
             margin: 2px;
+            
         }
         #corpo>div{
             border-width: 1px;
@@ -109,7 +110,7 @@
                 }
                 
                 if(automatico) {
-                    setTimeout(resolverJogo, 100);
+                    setTimeout(resolverJogo, 100); //setTimeout define o tempo de espera(milisegundos) de cada jogada
                 }
                 
             }
@@ -226,15 +227,25 @@
             criaTabuleiro();
             automatico = false;
             btnResolver.disabled = true;
+            corpo.style="pointer-events: true;" 
 
         }
 
+        //
         function resolverJogo(){
             automatico=true;
             var proximoMovimento = 0; 
             var menor = 0;
             var possibilidades;
+
+            //Bloqueio de clicks e dos botões para prevenção de bugs
+            corpo.style="pointer-events: none;"; 
+            btnResolver.disabled = true;
+            btnResetar.disabled = true;
+           
+            
             if(camposPossiveisJogadas.length>0){
+                //Definição da primeira casa com as menores possibilidades
                 for (var i = 0; i < camposPossiveisJogadas.length; i++) {
                     possibilidades=verificaPossiveisMovimentos(camposPossiveisJogadas[i].linha,camposPossiveisJogadas[i].coluna).length;
                     if(possibilidades!=0){
@@ -243,7 +254,7 @@
                         break;
                     }
                 }
-                
+                //verificação de qual casa possui a menor quantidade de possibilidade
                 for (var i = proximoMovimento+1; i < camposPossiveisJogadas.length; i++) {
                     possibilidades=verificaPossiveisMovimentos(camposPossiveisJogadas[i].linha,camposPossiveisJogadas[i].coluna).length;
                     if(possibilidades<menor){
@@ -254,9 +265,13 @@
 
                 var linha =  camposPossiveisJogadas[proximoMovimento].linha;
                 var coluna = camposPossiveisJogadas[proximoMovimento].coluna;
-
+                //executa o click na casa definida como a que possui menor possibilidade
                 tabuleiro[linha][coluna].elemento.click();
             }
+            else 
+                btnResetar.disabled = false;
+                
+            
 
         }
 
