@@ -44,6 +44,7 @@
         var camposJaUtilizados = [];
         var quantidadeDeJogadas = 0;
         var primeiraJogada = true;
+        var automatico = false;
         
         //Referncias
         var corpo = document.getElementById("corpo");
@@ -51,6 +52,7 @@
         var btnResolver = document.getElementById("resolver");
         
         btnResetar.addEventListener("click",resetarJogo);
+        btnResolver.addEventListener("click",resolverJogo);
 
         criaTabuleiro();
         
@@ -101,10 +103,14 @@
 
                         camposPossiveisJogadas=verificaPossiveisMovimentos(linha,coluna);
                         colorirPossiveisCasas(camposPossiveisJogadas,"verde");
+                        
                     }
                     
                 }
-
+                
+                if(automatico) {
+                    setTimeout(resolverJogo, 100);
+                }
                 
             }
         }
@@ -218,8 +224,43 @@
             primeiraJogada = true;
             corpo.innerHTML="";
             criaTabuleiro();
+            automatico = false;
+            btnResolver.disabled = true;
 
-        }    
+        }
+
+        function resolverJogo(){
+            automatico=true;
+            var proximoMovimento = 0; 
+            var menor = 0;
+            var possibilidades;
+            if(camposPossiveisJogadas.length>0){
+                for (var i = 0; i < camposPossiveisJogadas.length; i++) {
+                    possibilidades=verificaPossiveisMovimentos(camposPossiveisJogadas[i].linha,camposPossiveisJogadas[i].coluna).length;
+                    if(possibilidades!=0){
+                        menor=possibilidades;
+                        proximoMovimento = i;
+                        break;
+                    }
+                }
+                
+                for (var i = proximoMovimento+1; i < camposPossiveisJogadas.length; i++) {
+                    possibilidades=verificaPossiveisMovimentos(camposPossiveisJogadas[i].linha,camposPossiveisJogadas[i].coluna).length;
+                    if(possibilidades<menor){
+                        menor=possibilidades;
+                        proximoMovimento = i;
+                    }
+                }
+
+                var linha =  camposPossiveisJogadas[proximoMovimento].linha;
+                var coluna = camposPossiveisJogadas[proximoMovimento].coluna;
+
+                tabuleiro[linha][coluna].elemento.click();
+            }
+
+        }
+
+        
     
     </script>
 </body>
