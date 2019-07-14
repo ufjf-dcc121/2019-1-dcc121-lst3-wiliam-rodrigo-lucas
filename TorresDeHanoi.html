@@ -251,11 +251,13 @@
             desenharEstadoDoJogo();
         }
 
+        //Verifica se a jogada pode ser feita
         function verificaJogada(pecaEmMovimento,haste){
             if(pecaEmMovimento<haste[haste.length-1] || haste.length == 0) return true;
             else return false;
         }
         
+        //Caso a haste c tenha todas as peças em ordem
         function verificaVitoria(){
             var vetorVitoria = [5,4,3,2,1];
             for (var i = 0; i < 5; i++){
