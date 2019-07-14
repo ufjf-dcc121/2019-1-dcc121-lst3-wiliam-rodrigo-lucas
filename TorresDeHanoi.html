@@ -8,7 +8,7 @@
         #base{
             position: absolute;
             top: 400px;
-            width: 892px;
+            width: 950px;
             height: 50px;
             background-color: rgb(94, 75, 47);
         }
@@ -20,6 +20,9 @@
             background-color:gray;
             border-top-left-radius: 15px;
             border-top-right-radius: 15px;
+            text-align: center;
+            color: white;
+            font-size: 28px;
         }
         #hasteA{
             left: 145px;
@@ -72,6 +75,19 @@
             left: 10px;
         }
 
+        #reset{
+            position: absolute;
+            top:500px;
+        }
+        p{
+            position: absolute;
+            top:450px;  
+        }
+        
+        h1{
+            visibility: hidden;
+        }
+        
         /* 
             Primeira haste +320 left
             Segunda haste +620 left
@@ -82,38 +98,174 @@
 
 </head>
 <body>
-  
-    <div id="hasteA"></div>
-    <div id="hasteB"></div>
-    <div id="hasteC"></div>
-    <div id="base"></div>
+    <h1 id="msgVitoria">Parabéns! Você completou o desafio!</h1>
+    <div id="corpo">
+        <div id="hasteA">A</div>
+        <div id="hasteB">B</div>
+        <div id="hasteC">C</div>
+        <div id="base"></div>
+    </div>
 
-    <div id="peca1">1</div>
-    <div id="peca2">2</div>
-    <div id="peca3">3</div>
-    <div id="peca4">4</div>
-    <div id="peca5">5</div>
+    <p>Quantidade de jogadas: <span id="quant">0</span></p>
+    <button id="reset">Resetar</button>
     
    <script>
        
-       //Referencias 
-       var peca1 = document.getElementById("peca1");
-       var peca2 = document.getElementById("peca2");
-       var peca3 = document.getElementById("peca3");
-       var peca4 = document.getElementById("peca4");
-       var peca5 = document.getElementById("peca5");
+        var pecas = [];
+        //Referencias 
+        var hasteA = document.getElementById("hasteA");
+        var hasteB = document.getElementById("hasteB");
+        var hasteC = document.getElementById("hasteC");
+        var corpo = document.getElementById("corpo");
+        var quant = document.getElementById("quant");
+        var btnResetar = document.getElementById("reset");
+        var msgVitoria = document.getElementById("msgVitoria");
+
+        
+        //Vetores com o css inicial de cada peça   
+        var posicoesIniciaisLeft = [110,85,60,35,10]; 
+        var posicoesIniciaisTop = [370,340,310,280,250];
+
+        //Vetores com as informações de quais peças estam em cada haste
+        var pecasHasteA = [5,4,3,2,1];
+        var pecasHasteB = [];
+        var pecasHasteC = [];
        
-       var posicoesIniciaisLeft = [110,85,60,35,10];
-       var posicoesIniciaisTop = [250,280,310,340,370];
 
-       var hasteA = [5,4,3,2,1];
-       var hasteB = [];
-       var hasteC = [];
+        hasteA.addEventListener("click",clickHaste("A"));
+        hasteB.addEventListener("click",clickHaste("B"));
+        hasteC.addEventListener("click",clickHaste("C"));
+        btnResetar.addEventListener("click",resetarJogo);
 
+        var pecaEmMovimento = 0; 
+
+        criaPecas();
+
+        function criaPecas(){
+            for (var i = 1; i < 6; i++) {
+                var novaDiv = document.createElement("div");
+                novaDiv.id = "peca"+i;
+                novaDiv.innerText = i;
+                pecas.push(novaDiv);
+                corpo.appendChild(novaDiv);
+            }
+             
+        }
+
+        function clickHaste(vetor){
+            return function(){
+                if(pecaEmMovimento==0){
+                    //HasteA
+                    if(vetor=="A"){
+                        if(pecasHasteA.length!=0){
+                        pecaEmMovimento=pecasHasteA[pecasHasteA.length-1];
+                        pecasHasteA.splice(pecasHasteA.length-1,1);
+                        }
+                    }
+                    //HasteB
+                    if(vetor=="B"){
+                        if(pecasHasteB.length!=0){
+                        pecaEmMovimento=pecasHasteB[pecasHasteB.length-1];
+                        pecasHasteB.splice(pecasHasteB.length-1,1);
+                        }
+                    }
+                    //HasteC
+                    if(vetor=="C"){
+                        if(pecasHasteC.length!=0){
+                        pecaEmMovimento=pecasHasteC[pecasHasteC.length-1];
+                        pecasHasteC.splice(pecasHasteC.length-1,1);
+                        }
+                    }
+                    desenharEstadoDoJogo(); 
+                }
+                else{
+                    //HasteA
+                    if(vetor=="A")
+                        if(verificaJogada(pecaEmMovimento,pecasHasteA)){
+                            pecasHasteA.push(pecaEmMovimento);
+                            pecaEmMovimento=0;
+                            quant.innerText = Number(quant.innerText)+1;
+                            desenharEstadoDoJogo();
+                        }
+
+                    //HasteA
+                    if(vetor=="B")
+                        if(verificaJogada(pecaEmMovimento,pecasHasteB)){
+                            pecasHasteB.push(pecaEmMovimento);
+                            pecaEmMovimento=0;
+                            quant.innerText = Number(quant.innerText)+1;
+                            desenharEstadoDoJogo();
+                        }
+                    
+                    //HasteA
+                    if(vetor=="C")
+                        if(verificaJogada(pecaEmMovimento,pecasHasteC)){
+                            pecasHasteC.push(pecaEmMovimento);
+                            pecaEmMovimento=0;
+                            quant.innerText = Number(quant.innerText)+1;
+                            desenharEstadoDoJogo();
+                        }
+
+                    
+                    
+                    if(verificaVitoria()){
+                            msgVitoria.style.visibility = "visible"
+                            corpo.style="pointer-events: false;" 
+                            btnResetar.disabled = true;
+                    }
+                }
+            } 
+        }
+
+        function desenharEstadoDoJogo(){
+            if(pecaEmMovimento!=0){
+                pecas[pecaEmMovimento-1].style.top = "10px";
+                
+            }
+            
+            //HasteA
+            for (var i = 0; i < pecasHasteA.length; i++) {
+                pecas[pecasHasteA[i]-1].style.top = posicoesIniciaisTop[i]+"px";
+                pecas[pecasHasteA[i]-1].style.left = posicoesIniciaisLeft[pecasHasteA[i]-1]+"px";
+            }
+
+            //HasteB
+            for (var i = 0; i < pecasHasteB.length; i++) {
+                pecas[pecasHasteB[i]-1].style.top = posicoesIniciaisTop[i]+"px";
+                pecas[pecasHasteB[i]-1].style.left = posicoesIniciaisLeft[pecasHasteB[i]-1]+320+"px";
+            }
+
+            //HasteC
+            for (var i = 0; i < pecasHasteC.length; i++) {
+                pecas[pecasHasteC[i]-1].style.top = posicoesIniciaisTop[i]+"px";
+                pecas[pecasHasteC[i]-1].style.left = posicoesIniciaisLeft[pecasHasteC[i]-1]+620+"px";
+            }
+        }
+
+        function resetarJogo(){
+            pecasHasteA = [5,4,3,2,1];
+            pecasHasteB = [];
+            pecasHasteC = [];
+            quant.innerText = 0;
+            pecaEmMovimento = 0;
+            desenharEstadoDoJogo();
+        }
+
+        //Verifica se a jogada pode ser feita
+        function verificaJogada(pecaEmMovimento,haste){
+            if(pecaEmMovimento<haste[haste.length-1] || haste.length == 0) return true;
+            else return false;
+        }
+        
+        //Caso a haste c tenha todas as peças em ordem
+        function verificaVitoria(){
+            var vetorVitoria = [5,4,3,2,1];
+            for (var i = 0; i < 5; i++){
+                if(pecasHasteC[i]!=vetorVitoria[i]) return false;
+            }
+            return true;
+        }
        
-
-
-
    </script>
    
 </body>
