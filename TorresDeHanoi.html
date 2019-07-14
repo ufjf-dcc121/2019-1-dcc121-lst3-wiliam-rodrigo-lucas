@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Torres de Hanoi</title>
+
+    <style>
+        #base{
+            position: absolute;
+            top: 400px;
+            width: 892px;
+            height: 50px;
+            background-color: rgb(94, 75, 47);
+        }
+        #hasteA,#hasteB,#hasteC{
+            position: absolute;
+            top: 100px;
+            width: 30px;
+            height: 300px;
+            background-color:gray;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        #hasteA{
+            left: 145px;
+        }
+        #hasteB{    
+            left: 465px;
+        }
+        #hasteC{
+            left: 765px;
+        }
+
+        #peca1,#peca2,#peca3,#peca4,#peca5{
+            position: absolute;
+            height: 30px;
+            float: right;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            font-size: 28px;
+        }
+
+        #peca1{
+            width: 100px;
+            background-color:red;
+            top: 250px;
+            left: 110px;
+        }
+        #peca2{
+            width: 150px;
+            background-color:orange;
+            top: 280px;
+            left: 85px;
+        }
+        #peca3{
+            width: 200px;
+            background-color:rgb(236, 236, 38);
+            top: 310px;
+            left: 60px;
+        }
+        #peca4{
+            width: 250px;
+            background-color:green;
+            top: 340px;
+            left: 35px;
+        }
+        #peca5{
+            width: 300px;
+            background-color:blue;
+            top: 370px;
+            left: 10px;
+        }
+
+        /* 
+            Primeira haste +320 left
+            Segunda haste +620 left
+        
+        */
+
+    </style>
+
+</head>
+<body>
+  
+    <div id="hasteA"></div>
+    <div id="hasteB"></div>
+    <div id="hasteC"></div>
+    <div id="base"></div>
+
+    <div id="peca1">1</div>
+    <div id="peca2">2</div>
+    <div id="peca3">3</div>
+    <div id="peca4">4</div>
+    <div id="peca5">5</div>
+    
+   <script>
+       
+       //Referencias 
+       var peca1 = document.getElementById("peca1");
+       var peca2 = document.getElementById("peca2");
+       var peca3 = document.getElementById("peca3");
+       var peca4 = document.getElementById("peca4");
+       var peca5 = document.getElementById("peca5");
+       
+       var posicoesIniciaisLeft = [110,85,60,35,10];
+       var posicoesIniciaisTop = [250,280,310,340,370];
+
+       var hasteA = [5,4,3,2,1];
+       var hasteB = [];
+       var hasteC = [];
+
+       
+
+
+
+   </script>
+   
+</body>
+</html>
