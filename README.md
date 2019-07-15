@@ -14,5 +14,5 @@
 <p>2 - <a href="https://ufjf-dcc121.github.io/2019-1-dcc121-lst3-wiliam-rodrigo-lucas/TorresDeHanoi.html">Torres de Hanoi</a>
 </p>
 
-<p>3 - <a href="https://ufjf-dcc121.github.io/2019-1-dcc121-lst3-wiliam-rodrigo-lucas/PasseioDoCavalo2.html">Passeio do Cavalo</a>
+<p>3 - <a href="https://ufjf-dcc121.github.io/2019-1-dcc121-lst3-wiliam-rodrigo-lucas/PasseioDoCavalo.html">Passeio do Cavalo</a>
 </p>
