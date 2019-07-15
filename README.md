@@ -1,7 +1,8 @@
 <p>Integrantes:</p>
-<p>Lucas - </p>
-<p>Wilian - </p>
-<p> Rodrigo Torres Rego - 201876029</p>
+<p>Lucas Lino do Carmo Freitas - 201876034</p>
+<p>Rodrigo Torres Rego - 201876029</p>
+<p>Wiliam Rocha dos Santos - 201876031</p>
+
 
 <p>Curso: Sistemas de Informação</p>
 
